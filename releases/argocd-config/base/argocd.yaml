@@ -1,0 +1,105 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ArgoCD
+metadata:
+  name: argocd
+spec:
+  applicationSet: {}
+  applicationInstanceLabelKey: ''
+  server:
+    # host: ""
+    autoscale:
+      enabled: false
+    grpc:
+      ingress:
+        enabled: false
+    ingress:
+      enabled: false
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 125m
+        memory: 128Mi
+    route:
+      enabled: true
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: passthrough
+    service:
+      type: ""
+  statusBadgeEnabled: true
+  grafana:
+    enabled: false
+    ingress:
+      enabled: false
+    route:
+      enabled: true
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: passthrough
+  # initialRepositories: 
+  prometheus:
+    enabled: false
+    ingress:
+      enabled: false
+    route:
+      enabled: false
+  initialSSHKnownHosts: {}
+  kustomizeBuildOptions: --load-restrictor LoadRestrictionsNone --enable-helm
+  rbac:
+    defaultPolicy: 'role:generico'
+    policy: |
+      g, system:cluster-admins, role:admin
+      g, cluster-admins, role:admin
+    scopes: '[groups]'
+  repo:
+    replicas: 2
+    resources:
+      # limits:
+        # cpu: '2'
+        # memory: 2Gi
+      requests:
+        cpu: 250m
+        memory: 256Mi
+  dex:
+    openShiftOAuth: true
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 250m
+        memory: 128Mi
+  ha:
+    enabled: false
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 250m
+        memory: 128Mi
+  redis:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 250m
+        memory: 128Mi
+  controller:
+    appSync: "300s"
+    processors:
+      operation: 25
+      status: 50
+    resources:
+      limits:
+        cpu: "5"
+        memory: 20Gi
+      requests:
+        cpu: 250m
+        memory: 1Gi
+    sharding:
+      enabled: true
+      replicas: 2
